@@ -1,0 +1,90 @@
+pz_z                # photometric redshift (NOT USED IN COMA ANALYSIS)
+pz_zerr             # photometric redshift error (NOT USED IN COMA ANALYSIS)
+phot_source         # source of morphology type classification (NOT USED IN COMA ANALYSIS)
+p_phtype0           # morphology type including visual inspection by Prof. Hwang (NOT USED IN COMA ANALYSIS)
+p_radgal            # unknown (NOT USED IN COMA ANALYSIS)
+p_objid             # SDSS objid
+p_ra                # right ascension in deg
+p_dec               # declination in deg
+p_dr7objid          # SDSS DR7 objid
+p_petromag_u        # u-band Petrosian magnitude (visually faint objects are replaced with fiber/model magnitudes)
+p_petromagerr_u     # u-band Petrosian magnitude error (visually faint objects are replaced with fiber/model magnitudes)
+p_petromag_g        # g-band Petrosian magnitude (visually faint objects are replaced with fiber/model magnitudes)
+p_petromagerr_g     # g-band Petrosian magnitude error (visually faint objects are replaced with fiber/model magnitudes)
+p_petromag_r        # r-band Petrosian magnitude (visually faint objects are replaced with fiber/model magnitudes)
+p_petromagerr_r     # r-band Petrosian magnitude error (visually faint objects are replaced with fiber/model magnitudes)
+p_petromag_i        # i-band Petrosian magnitude (visually faint objects are replaced with fiber/model magnitudes)
+p_petromagerr_i     # i-band Petrosian magnitude error (visually faint objects are replaced with fiber/model magnitudes)
+p_petromag_z        # z-band Petrosian magnitude (visually faint objects are replaced with fiber/model magnitudes)
+p_petromagerr_z     # z-band Petrosian magnitude error (visually faint objects are replaced with fiber/model magnitudes)
+p_modelmag_u        # u-band model magnitude
+p_modelmagerr_u     # u-band model magnitude error
+p_modelmag_g        # g-band model magnitude
+p_modelmagerr_g     # g-band model magnitude error
+p_modelmag_r        # r-band model magnitude
+p_modelmagerr_r     # r-band model magnitude error
+p_modelmag_i        # i-band model magnitude
+p_modelmagerr_i     # i-band model magnitude error
+p_modelmag_z        # z-band model magnitude
+p_modelmagerr_z     # z-band model magnitude error
+p_fibermag_u        # u-band fiber magnitude
+p_fibermagerr_u     # u-band fiber magnitude error
+p_fibermag_g        # g-band fiber magnitude
+p_fibermagerr_g     # g-band fiber magnitude error
+p_fibermag_r        # r-band fiber magnitude
+p_fibermagerr_r     # r-band fiber magnitude error
+p_fibermag_i        # i-band fiber magnitude
+p_fibermagerr_i     # i-band fiber magnitude error
+p_fibermag_z        # z-band fiber magnitude
+p_fibermagerr_z     # z-band fiber magnitude error
+p_extinction_u      # extinction in u-band
+p_extinction_g      # extinction in g-band
+p_extinction_r      # extinction in r-band
+p_extinction_i      # extinction in i-band
+p_extinction_z      # extinction in z-band
+p_petrorad_r        # Petrosian radius in r-band
+p_petroraderr_r     # Petrosian radius error in r-band
+p_devrad_i          # deVaucouleurs fit scale radius (NOT USED IN COMA ANALYSIS)
+p_devab_i           # deVaucouleurs fit a/b (NOT USED IN COMA ANALYSIS)
+p_run               # SDSS run number
+p_rerun             # SDSS rerun number
+p_camcol            # SDSS camera column
+p_field             # SDSS field number
+p_efac              # unknown (NOT USED IN COMA ANALYSIS)
+p_probpsf           # 1 if point source, 0 else (VISUALLY CORRECTED BY KANG WOOSEOK - up to r-band Petrosian 17 mag)
+g06_id              # unknown (NOT USED IN COMA ANALYSIS)
+g06_mhi             # unknown (NOT USED IN COMA ANALYSIS)
+a70_id              # unknown (NOT USED IN COMA ANALYSIS)
+a70_mhi             # unknown (NOT USED IN COMA ANALYSIS)
+b00_id              # unknown (NOT USED IN COMA ANALYSIS)
+b00_mhi             # unknown (NOT USED IN COMA ANALYSIS)
+h11_id              # unknown (NOT USED IN COMA ANALYSIS)
+h21_mhi             # unknown (NOT USED IN COMA ANALYSIS)
+inf_jmass           # unknown (NOT USED IN COMA ANALYSIS)
+jmass               # unknown (NOT USED IN COMA ANALYSIS)
+sup_jmass           # unknown (NOT USED IN COMA ANALYSIS)
+p_phtype            # morphology type including visual inspection by Prof. Hwang (NOT USED IN COMA ANALYSIS)
+memflag             # membership flag of Coma (Y: member, N: nonmember)
+v_dispersion        # unknown (NOT USED IN COMA ANALYSIS)
+v_disp_err          # unknown (NOT USED IN COMA ANALYSIS)
+v_sn                # unknown (NOT USED IN COMA ANALYSIS)
+v_chisq             # unknown (NOT USED IN COMA ANALYSIS)
+z_tot               # final redshift (combined from all sources)
+zerr_tot            # final redshift error (combined from all sources)
+z_source            # source of redshift (MMT, SDSS, NED, DESI, Healy+21)
+z_sdss              # redshift from SDSS
+zerr_sdss           # redshift error from SDSS
+z_ned               # redshift from NED
+z_h21               # redshift from Healy+21
+zerr_h21            # redshift error from Healy+21
+z_desi              # redshift from DESI EDR
+zerr_desi           # redshift error from DESI EDR
+id_desi             # DESI TARGET ID
+z_mmt               # redshift from MMT observation - measured with RVSNUpy
+zerr_mmt            # redshift error from MMT observation - measured with RVSNUpy
+r_mmt               # Tonry & Davis (1979) r-value - measured with RVSNUpy
+file_mmt            # corresponding MMT spectrum file
+colflag             # color flag for members determined from color-magnitude diagram (B: blue member, N: nonmember, R: red member)
+ra_cl               # right ascension of the center of the Coma cluster in deg
+dec_cl              # declination of the center of the Coma cluster in deg
+z_cl                # redshift of the center of the Coma cluster
