@@ -46,6 +46,8 @@ DATA/A2199/*.txt
 DATA/A2199/*.npz
 DATA/A2199/*.sav
 DATA/A2199/Song2017/
+DATA/A2199/DR17SDSScat/
+DATA/A2199/z_A2199_Hwang/
 # Keep Python scripts and specific tables
 !DATA/A2199/*.py
 !DATA/A2199/A2199_Machine_Redable_Table2.txt
