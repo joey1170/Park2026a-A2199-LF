@@ -42,16 +42,17 @@ DATA/TNG50/
 
 # A2199 cluster data
 DATA/A2199/
-DATA/A2199_Machine_Redable_Table3.txt  
-DATA/A2199/A2199_Machine_Redable_Table2.txt
+!DATA/A2199_Machine_Redable_Table3.txt  
+!DATA/A2199/A2199_Machine_Redable_Table2.txt
+!A2199/*.py
 
 # Coma cluster data
 DATA/Coma/*.npz
 DATA/Coma/coma_woody_master_catalog.npz
 
 # Virgo cluster data (large NGVS catalogs)
-DATA/Virgo/*.csv
-DATA/Virgo/*.txt
+!DATA/Virgo/*.csv
+!DATA/Virgo/*.txt
 !DATA/Virgo/*.py
 
 # All CSV files in DATA subdirectories (except explicitly allowed)

@@ -4,7 +4,7 @@
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org/)
 [![License](https://img.shields.io/badge/license-TBD-lightgrey.svg)]()
 
-**r-band luminosity function of the A2199 galaxy cluster, combining SDSS photometry and HeCS spectroscopy**
+**r-band luminosity function of the A2199 galaxy cluster, combining spectroscopy**
 
 ---
 
@@ -13,7 +13,7 @@
 This repository presents the analysis of the **A2199 galaxy cluster luminosity function (LF)**. It uses:
 
 - **SDSS DR18 photometry** (~13,000 galaxies within 35 arcmin)
-- **Spectroscopy** (~1,659 cluster redshifts)
+- **Spectroscopy** (~2,000 redshifts)
 - **Cluster comparison:** A2199, Coma, Virgo
 - **Field reference:** Blanton et al. (2005)
 - **Simulation:** TNG50 (IllustrisTNG)
@@ -23,7 +23,7 @@ This repository presents the analysis of the **A2199 galaxy cluster luminosity f
 2. Fit Schechter function (φ*, M*, α)
 3. Investigate faint-end slope upturn
 4. Compare cluster vs field LFs
-5. Separate red sequence and blue cloud LFs
+5. Find red sequence in clusters
 
 ## Repository Structure
 
@@ -125,7 +125,7 @@ sklearn
 
 ## Citation
 
-If you use this code or data, please cite:
+If you use this code or data, please read or cite:
 
 ```
 A redshift survey of the nearby galaxy cluster Abell 2199 : No upturn of the faint-end slope of galaxy luminosity function
@@ -134,7 +134,7 @@ https://arxiv.org/abs/2601.21329v1
 
 ## Author
 
-**Jongin Park**  
+**Jong-In Park**  
 Seoul National University  
 jongin.park@snu.ac.kr  
 2026
