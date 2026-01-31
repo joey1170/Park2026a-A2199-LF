@@ -1,2 +1,0 @@
-s3_spcomp  FLOAT : Spectroscopic Completeness (0 - 1) ; this is meaningful only for the galaxies at r_Petro,0<=17.77 (i.e. main galaxy sample), -48<lambda<51 and -33.5<eta<36.5 (SDSS coordinates)
-s3_spcompm FLOAT : Spectroscopic Completeness with masks used for KIAS VAGC (i.e. use only for those with 0 - 1 and remove those <0) ; this is meaningful only for the galaxies at r_Petro,0<=17.77 (i.e. main galaxy sample), -48<lambda<51 and -33.5<eta<36.5 (SDSS coordinates)
