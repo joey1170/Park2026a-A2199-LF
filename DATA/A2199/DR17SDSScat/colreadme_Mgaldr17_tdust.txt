@@ -1,0 +1,15 @@
+# Dust temperature/mass from 2-component MBB fit (Not for all galaxies)
+# Because the number of galaxies in this save file is NOT the same as the one in Mgaldr16_id.sav, we need to match the galaxies using s3_objid !!!!
+ts3_objid  STRING : SDSS ObjID
+tflag     INTEGER : quality flag (0: reliable, 1: NO because Tck<0, 2: NO because one component is not determined, 9: no measurement, USE ONLY 0!!) 
+xpm         FLOAT : observed wavelength array for SED plot (in unit of micron)
+ts3_wypm    FLOAT : 2D array (galaxy,Snu) for the observed flux density of the warm component for SED plot (in unit of Jy)
+ts3_cypm    FLOAT : 2D array (galaxy,Snu) for the observed flux density of the cold component for SED plot (in unit of Jy)
+ts3_wtdust  FLOAT : Dust temperature of the warm component (K)
+ts3_wtduste FLOAT : Error in Dust temperature of the warm component (K)
+ts3_ctdust  FLOAT : Dust temperature of the cold component (K)
+ts3_ctduste FLOAT : Error Dust temperature of the cold component (K)
+ts3_wmdust  FLOAT : Dust mass of the warm component (Msun)
+ts3_wmduste FLOAT : Error in Dust mass of the warm component (Msun)
+ts3_cmdust  FLOAT : Dust mass of the cold component (Msun)
+ts3_cmduste FLOAT : Error in Dust mass of the warm component (Msun)
