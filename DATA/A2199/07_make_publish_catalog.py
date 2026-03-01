@@ -60,10 +60,10 @@ header_txt = """
 Title: A redshift survey of the nearby galaxy cluster Abell 2199 : No
 upturn of the faint-end slope of galaxy luminosity function
 
-Authors: Park J., Song H., Hwang H.S.
+Authors: Park J-I., Song H., Hwang H.S.
 Table: Redshifts in the field of A2199 within 35 arcmins from the cluster center
 ================================================================================
-Byte-by-byte Description of file: v57n2p249_Table1.txt
+Byte-by-byte Description of file: v57n2p249_Table2.txt
 --------------------------------------------------------------------------------
   Bytes  Format Units  Label    Explanations
 --------------------------------------------------------------------------------

@@ -17,6 +17,18 @@ Input files:
 Output file:
     - A2199_DESI_specz_within{radius}arcmin.csv
 
+If the data has already been extracted, you can skip the extraction process and use the existing data directly.
+ 
+For analyses that only require the recommended "best" redshift for each target—regardless of survey or program—it is recommended to use the following:
+
+- zall-pix-iron.fits (20.8GB): Combines all HEALPix-based redshifts across all surveys and programs. The ZCAT_PRIMARY boolean column indicates the recommended redshift.
+- zall-tilecumulative-iron.fits (23.6GB): Provides all cumulative, tile-based redshifts across all surveys and programs.
+
+These files are available at:
+  https://data.desi.lbl.gov/public/dr1/spectro/redux/iron/zcatalog/v1/zall-pix-iron.fits
+  https://data.desi.lbl.gov/public/dr1/spectro/redux/iron/zcatalog/v1/zall-tilecumulative-iron.fits
+Note: These are v1 catalogs, which are the preferred version for DR1.
+
 Author: Jongin Park
 Date: 2026
 """

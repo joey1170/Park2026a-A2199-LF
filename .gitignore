@@ -98,6 +98,9 @@ CODE/LF/Coma_LF.csv
 CODE/LF/Virgo_LF.csv
 CODE/LF/Field_LF.csv
 
+# Do NOT upload latex folder
+LATEX/
+
 # macOS
 .DS_Store
 .AppleDouble
