@@ -82,7 +82,7 @@ def asinh_flux_error(f, dm, band):
     return factor * dm
 
 
-def load_catalog(input_file='./04f.A2199_mastercat_within35arcmin_flag_update.csv'):
+def load_catalog(input_file='./A2199_mastercat_intermediate_file2_update_redshift.csv'):
     """
     Load the photometric catalog and filter for valid redshifts.
     
@@ -270,7 +270,7 @@ def clean_intermediate_columns(df, bands=['u', 'g', 'r', 'i', 'z']):
     return df
 
 
-def merge_and_save(df0, df, output_file='./A2199_mastercat_within35arcmin.csv'):
+def merge_and_save(df0, df, output_file='./A2199_mastercat_intermediate_file3_kcorrection.csv'):
     """
     Merge the r-band absolute magnitude back to the original catalog and save.
     

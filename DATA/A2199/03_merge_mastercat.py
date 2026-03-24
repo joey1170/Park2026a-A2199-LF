@@ -52,7 +52,15 @@ def prepare_ned_catalog(df_ned):
     print("\nPreparing NED catalog...")
     df_ned_clean = df_ned.copy()
     df_ned_clean['z_ned_z'] = df_ned_clean['redshift'].astype(float)
-    df_ned_clean['z_ned_zerr'] = -9.0
+
+    # Use uncertainty from NED query output when available.
+    # Rule: NaN or negative uncertainty -> -9.
+    if 'redshift_uncertainty' in df_ned_clean.columns:
+        zerr = pd.to_numeric(df_ned_clean['redshift_uncertainty'], errors='coerce')
+        df_ned_clean['z_ned_zerr'] = zerr.where((~zerr.isna()) & (zerr >= 0), -9.0)
+    else:
+        df_ned_clean['z_ned_zerr'] = -9.0
+
     df_ned_clean['z_ned_name'] = df_ned_clean['ned_name']
     df_ned_clean = df_ned_clean[['p_ra', 'p_dec', 'z_ned_name', 'z_ned_z', 'z_ned_zerr']]
     print(f"   → Prepared {len(df_ned_clean):,} NED entries")
@@ -168,57 +176,64 @@ def determine_final_redshift_columns(df):
     Set the unified/final redshift columns on the catalog, as in 03.Merge_mastercat.ipynb.
     
     Follows:
-        - z_tot_z: first available (good) z from DESI, SDSS, NED (priority: DESI > SDSS > NED)
-        - z_tot_source: which catalog the z_tot_z comes from ("DESI", "SDSS", "NED", "none")
+        - z_tot_z: first available (good) z from MMT, DESI, SDSS, NED
+          (priority: MMT > DESI > SDSS > NED)
+        - z_tot_zsource: which catalog the z_tot_z comes from
+          ("MMT", "DESI", "SDSS", "NED", "none")
         - z_tot_zerr: corresponding z uncertainty
     
     Columns added:
-        - z_tot_z, z_tot_source, z_tot_zerr
+        - z_tot_z, z_tot_zsource, z_tot_zerr
     """
     print("\n" + "="*70)
     print("STEP 4: DETERMINING FINAL REDSHIFT COLUMNS (z_tot_z, etc)")
     print("="*70)
     # Use -9 as missing value
+    z_mmt_z = df['z_mmt_z'].values
     z_desi_z = df['z_desi_z'].values
     z_sdss_z = df['z_sdss_z'].values
     z_ned_z = df['z_ned_z'].values
 
+    z_mmt_zerr = df['z_mmt_zerr'].values
     z_desi_zerr = df['z_desi_zerr'].values
     z_sdss_zerr = df['z_sdss_zerr'].values
     z_ned_zerr = df['z_ned_zerr'].values
 
     # Boolean masks for valid z
-    has_desi = z_desi_z > -9
-    has_sdss = (~has_desi) & (z_sdss_z > -9)
-    has_ned  = (~has_desi) & (~has_sdss) & (z_ned_z > -9)
-    has_none = (~has_desi) & (~has_sdss) & (~has_ned)
+    has_mmt  = z_mmt_z > -9
+    has_desi = (~has_mmt) & (z_desi_z > -9)
+    has_sdss = (~has_mmt) & (~has_desi) & (z_sdss_z > -9)
+    has_ned  = (~has_mmt) & (~has_desi) & (~has_sdss) & (z_ned_z > -9)
 
     # Final redshift value
-    z_tot_z = np.where(has_desi, z_desi_z,
+    z_tot_z = np.where(has_mmt, z_mmt_z,
+                  np.where(has_desi, z_desi_z,
                   np.where(has_sdss, z_sdss_z,
                     np.where(has_ned, z_ned_z, -9)
-                  ))
+                  )))
 
     # Final redshift source
-    z_tot_source = np.where(has_desi, 'DESI',
+    z_tot_zsource = np.where(has_mmt, 'MMT',
+                     np.where(has_desi, 'DESI',
                      np.where(has_sdss, 'SDSS',
-                       np.where(has_ned, 'NED', 'none')))
+                       np.where(has_ned, 'NED', 'none'))))
 
-    z_tot_zerr   = np.where(has_desi, z_desi_zerr,
+    z_tot_zerr   = np.where(has_mmt, z_mmt_zerr,
+                     np.where(has_desi, z_desi_zerr,
                      np.where(has_sdss, z_sdss_zerr,
                        np.where(has_ned, z_ned_zerr, -9)
-                     ))
+                     )))
 
     df['z_tot_z']      = z_tot_z
-    df['z_tot_source'] = z_tot_source
+    df['z_tot_zsource'] = z_tot_zsource
     df['z_tot_zerr']   = z_tot_zerr
 
     # For summary
     n_tot_z = (z_tot_z > -9).sum()
     print(f"   Objects with z_tot_z > -9: {n_tot_z:,} ({n_tot_z/len(df)*100:.1f}%)")
     print("   Redshift source counts:")
-    for _src in ['DESI','SDSS','NED','none']:
-        print(f"      {_src:4s}: {(z_tot_source==_src).sum():,}")
+    for _src in ['MMT', 'DESI', 'SDSS', 'NED', 'none']:
+        print(f"      {_src:4s}: {(z_tot_zsource==_src).sum():,}")
 
     return df
 
@@ -227,27 +242,31 @@ def print_merge_summary(df_final, extra_final_columns=True):
     print("MERGE SUMMARY")
     print("="*70)
     print(f"\nTotal objects in final catalog: {len(df_final):,}")
+    n_mmt = (df_final['z_mmt_z'] > -9).sum()
     n_ned = (df_final['z_ned_z'] > -9).sum()
     n_sdss = (df_final['z_sdss_z'] > -9).sum()
     n_desi = (df_final['z_desi_z'] > -9).sum()
-    has_any_z = ((df_final['z_ned_z'] > -9) | 
+    has_any_z = ((df_final['z_mmt_z'] > -9) |
+                 (df_final['z_ned_z'] > -9) | 
                  (df_final['z_sdss_z'] > -9) | 
                  (df_final['z_desi_z'] > -9))
     n_any_z = has_any_z.sum()
     print(f"\nRedshift source statistics:")
+    print(f"   MMT:  {n_mmt:,} ({n_mmt/len(df_final)*100:.1f}%)")
     print(f"   NED:  {n_ned:,} ({n_ned/len(df_final)*100:.1f}%)")
     print(f"   SDSS: {n_sdss:,} ({n_sdss/len(df_final)*100:.1f}%)")
     print(f"   DESI: {n_desi:,} ({n_desi/len(df_final)*100:.1f}%)")
     print(f"   Any:  {n_any_z:,} ({n_any_z/len(df_final)*100:.1f}%)")
-    n_multiple = ((df_final['z_ned_z'] > -9).astype(int) +
+    n_multiple = ((df_final['z_mmt_z'] > -9).astype(int) +
+                 (df_final['z_ned_z'] > -9).astype(int) +
                   (df_final['z_sdss_z'] > -9).astype(int) +
                   (df_final['z_desi_z'] > -9).astype(int)) > 1
     print(f"   Multiple sources: {n_multiple.sum():,} ({n_multiple.sum()/len(df_final)*100:.1f}%)")
     if extra_final_columns and "z_tot_z" in df_final.columns:
         n_tot = (df_final["z_tot_z"] > -9).sum()
         print(f"   z_tot_z  set for: {n_tot:,} ({n_tot/len(df_final)*100:.1f}%)")
-        for _src in ["DESI","SDSS","NED","none"]:
-            print(f"      z_tot_source={_src:4s}: {(df_final['z_tot_source']==_src).sum():,}")
+        for _src in ["MMT", "DESI", "SDSS", "NED", "none"]:
+            print(f"      z_tot_zsource={_src:4s}: {(df_final['z_tot_zsource']==_src).sum():,}")
     print(f"\nFinal catalog columns: {len(df_final.columns)}")
 
 def main():

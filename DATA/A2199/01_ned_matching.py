@@ -6,7 +6,7 @@ This script cross-matches a photometric galaxy catalog with NED
 (NASA/IPAC Extragalactic Database) to obtain spectroscopic redshifts:
 1. Loads photometric catalog with RA/Dec coordinates
 2. Queries NED for each object within a specified search radius
-3. Collects matches with available redshift data
+3. Collects matches with available redshift data (and uncertainty when available)
 4. Deduplicates matches by keeping the closest match
 5. Saves matched catalog to CSV
 
@@ -33,7 +33,7 @@ import time
 import pandas as pd
 from astropy.coordinates import SkyCoord
 from astropy import units as u
-from astroquery.ned import Ned
+from astroquery.utils.tap.core import Tap
 from tqdm import tqdm
 
 
@@ -74,9 +74,9 @@ def query_ned_for_catalog(df, search_radius_arcsec=1.5, sleep_time=0.0):
     
     For each object, this function:
     1. Creates a SkyCoord with RA/Dec
-    2. Queries NED within the specified radius
-    3. Filters for objects with redshift data
-    4. Stores the first (closest) match with redshift
+    2. Runs a NED TAP cone query within the specified radius
+    3. Keeps only spectroscopic rows (zflag starts with 'S')
+    4. Stores the closest spectroscopic match
     
     Parameters
     ----------
@@ -96,14 +96,21 @@ def query_ned_for_catalog(df, search_radius_arcsec=1.5, sleep_time=0.0):
     print(f"\nQuerying NED for {len(df):,} objects")
     print(f"  Search radius: {search_radius_arcsec} arcsec")
     print(f"  Sleep time between queries: {sleep_time} sec")
+    print(f"  Include p_objid in output: {'p_objid' in df.columns}")
     print("-"*70)
     
     matched_rows = []
-    search_radius = search_radius_arcsec * u.arcsec
+    search_radius_deg = search_radius_arcsec / 3600.0
+    tap = Tap(url="https://ned.ipac.caltech.edu/tap")
     
     # Query each object with progress bar
     for idx, row in tqdm(df.iterrows(), total=len(df), desc="Querying NED"):
         try:
+            # Keep original object id so the match can be traced back later.
+            p_objid = row["p_objid"] if "p_objid" in df.columns else None
+            if pd.isna(p_objid):
+                p_objid = None
+
             # Create coordinate for this object
             coord = SkyCoord(
                 ra=row['p_ra'] * u.deg,
@@ -111,29 +118,63 @@ def query_ned_for_catalog(df, search_radius_arcsec=1.5, sleep_time=0.0):
                 frame='icrs'
             )
             
-            # Query NED within radius
-            result = Ned.query_region(coord, radius=search_radius)
-            
-            # Check if redshift data is available
-            if 'Redshift' in result.colnames and len(result) > 0:
-                # Filter for rows with valid redshift (not masked)
-                redshift_rows = result[~result['Redshift'].mask]
-                
-                if len(redshift_rows) > 0:
-                    # Take the first match (closest by default)
-                    first_match = redshift_rows[0]
-                    
-                    # Store match information
-                    matched_rows.append({
-                        'p_ra': row['p_ra'],
-                        'p_dec': row['p_dec'],
-                        'ned_name': first_match['Object Name'],
-                        'redshift': first_match['Redshift'],
-                        'ned_ra': first_match['RA'],
-                        'ned_dec': first_match['DEC'],
-                        'type': first_match['Type'],
-                        'separation_arcsec': first_match['Separation']
-                    })
+            # Query NED TAP within radius (cone search)
+            query = (
+                "SELECT prefname, ra, dec, z, zunc, zflag, zrefcode, pretype "
+                "FROM NEDTAP.objdir "
+                f"WHERE CONTAINS(POINT('J2000', ra, dec), "
+                f"CIRCLE('J2000', {row['p_ra']}, {row['p_dec']}, {search_radius_deg})) = 1"
+            )
+            result = tap.launch_job(query).get_results()
+
+            if len(result) > 0:
+                best_match = None
+                best_sep_arcsec = None
+
+                for r in result:
+                    zflag = str(r["zflag"]).strip().upper()
+                    if not zflag.startswith("S"):
+                        continue
+
+                    # Skip rows without valid redshift value
+                    try:
+                        zval = float(r["z"])
+                    except Exception:
+                        continue
+
+                    # Redshift uncertainty from NEDTAP.objdir.zunc (if available)
+                    try:
+                        zunc_val = float(r["zunc"])
+                        if zunc_val <= 0:
+                            zunc_val = None
+                    except Exception:
+                        zunc_val = None
+
+                    candidate_coord = SkyCoord(
+                        ra=float(r["ra"]) * u.deg,
+                        dec=float(r["dec"]) * u.deg,
+                        frame="icrs",
+                    )
+                    sep_arcsec = coord.separation(candidate_coord).arcsec
+
+                    if best_sep_arcsec is None or sep_arcsec < best_sep_arcsec:
+                        best_sep_arcsec = sep_arcsec
+                        best_match = {
+                            "p_objid": p_objid,
+                            "p_ra": row["p_ra"],
+                            "p_dec": row["p_dec"],
+                            "ned_name": str(r["prefname"]).strip(),
+                            "reference_code": str(r["zrefcode"]).strip(),
+                            "redshift": zval,
+                            "redshift_uncertainty": zunc_val,
+                            "ned_ra": float(r["ra"]),
+                            "ned_dec": float(r["dec"]),
+                            "type": str(r["pretype"]).strip(),
+                            "separation_arcsec": sep_arcsec,
+                        }
+
+                if best_match is not None:
+                    matched_rows.append(best_match)
             
             # Optional sleep to avoid overloading NED servers
             if sleep_time > 0:
@@ -242,7 +283,7 @@ def main():
     
     # Configuration
     catalog_path = './z_A2199_Hwang/z_DATA/z_a2199phot21_5DR9_hshwang_35arcmin_cut.csv'
-    output_path = 'NED_query.csv'
+    output_path = './NED/A2199_NED_query.csv'
     search_radius_arcsec = 1.5  # Search radius in arcseconds
     sleep_time = 0.0  # Sleep between queries (seconds)
     
@@ -250,7 +291,7 @@ def main():
     print("\nSTEP 1: Loading photometric catalog")
     print("-"*70)
     df = load_catalog(catalog_path)
-    
+
     # Step 2: Query NED for each object
     print("\nSTEP 2: Querying NED database")
     print("-"*70)

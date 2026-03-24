@@ -84,7 +84,7 @@ def load_data(cluster_name='A2199'):
     
     # Load master catalog
     print("\n2. Loading master catalog...")
-    df_main = pd.read_csv('A2199_mastercat_intermediate_file0.csv')
+    df_main = pd.read_csv('A2199_mastercat_intermediate_file3_kcorrection.csv')
     print(f"   → Total objects: {len(df_main):,}")
     
     # Filter for objects with valid redshifts
@@ -333,7 +333,7 @@ def main():
     print("SAVING FINAL CATALOG")
     print("="*70)
     
-    output_file = 'A2199_mastercat_intermediate_file1.csv'
+    output_file = 'A2199_mastercat_within35arcmin.csv'
     df_final.to_csv(output_file, index=False)
     
     print(f"\n✅ Saved final catalog to: {output_file}")

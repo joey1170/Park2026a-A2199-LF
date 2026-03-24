@@ -101,6 +101,8 @@ CODE/LF/Field_LF.csv
 # Do NOT upload latex folder
 LATEX/
 
+Trash/
+
 # macOS
 .DS_Store
 .AppleDouble
@@ -133,3 +135,4 @@ Temporary Items
 *.log
 *.out
 *.tmp
+.tmp_py/
