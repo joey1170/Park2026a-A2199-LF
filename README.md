@@ -132,12 +132,23 @@ change to the conclusions).
 
 ## Citation
 
-If you use this code or data, please read or cite:
+If you use this code or data, please cite:
 
+Park, J.-I., Song, H., & Hwang, H. S. 2026, *JKAS*, 59, 33
+"A Redshift Survey of the Nearby Galaxy Cluster Abell 2199: No Upturn of the Faint-End Slope of Galaxy Luminosity Function"
+[DOI 10.5303/JKAS.2026.59.1.33](https://doi.org/10.5303/JKAS.2026.59.1.33) · [arXiv:2601.21329](https://arxiv.org/abs/2601.21329) · [ADS](https://ui.adsabs.harvard.edu/abs/2026JKAS...59...33P/abstract)
+
+```bibtex
+@article{Park2026a,
+  author  = {Park, Jong-In and Song, Hyunmi and Hwang, Ho Seong},
+  title   = {A Redshift Survey of the Nearby Galaxy Cluster Abell 2199: No Upturn of the Faint-End Slope of Galaxy Luminosity Function},
+  journal = {Journal of the Korean Astronomical Society},
+  year    = {2026},
+  volume  = {59},
+  pages   = {33},
+  doi     = {10.5303/JKAS.2026.59.1.33}
+}
 ```
-A redshift survey of the nearby galaxy cluster Abell 2199 : No upturn of the faint-end slope of galaxy luminosity function
-```
-https://arxiv.org/abs/2601.21329v1
 
 ## Author
 

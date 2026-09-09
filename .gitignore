@@ -136,3 +136,7 @@ Temporary Items
 *.out
 *.tmp
 .tmp_py/
+
+# editor / local artifacts
+.vscode/
+arxiv_upload.zip
