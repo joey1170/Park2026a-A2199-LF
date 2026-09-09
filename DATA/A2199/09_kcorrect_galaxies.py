@@ -6,10 +6,10 @@ This script performs k-corrections on SDSS photometry to compute absolute magnit
 for galaxies in the A2199 cluster catalog.
 
 Input:
-    - 04f.A2199_mastercat_within35arcmin_flag_update.csv
+    - A2199_mastercat_intermediate_file2_update_redshift.csv
 
 Output:
-    - A2199_mastercat_within35arcmin.csv
+    - A2199_mastercat_intermediate_file3_kcorrection.csv
 
 The script:
 1. Loads the photometric catalog with spectroscopic redshifts
@@ -310,7 +310,7 @@ def main():
     print("K-Correction and Absolute Magnitude Calculation")
     print("=" * 70)
     
-    # Set cosmology (WMAP)
+    # Cosmology used throughout this project
     cosmo = LambdaCDM(H0=70, Om0=0.3, Ode0=0.7)
     print(f"Using cosmology: H0={cosmo.H0.value}, Om0={cosmo.Om0}, Ode0={cosmo.Ode0}")
     print()

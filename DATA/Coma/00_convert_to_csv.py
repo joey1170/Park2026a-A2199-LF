@@ -183,11 +183,11 @@ def main():
     print("\nOutput files created:")
     if master_csv and os.path.exists(master_csv):
         size_mb = os.path.getsize(master_csv) / (1024**2)
-        print(f"  ✓ {master_csv} ({size_mb:.1f} MB)")
+        print(f"  {master_csv} ({size_mb:.1f} MB)")
     
     if redshift_csv and os.path.exists(redshift_csv):
         size_mb = os.path.getsize(redshift_csv) / (1024**2)
-        print(f"  ✓ {redshift_csv} ({size_mb:.1f} MB)")
+        print(f"  {redshift_csv} ({size_mb:.1f} MB)")
     
     print("\nThese CSV files are ready for downstream analysis.")
     print("="*70)

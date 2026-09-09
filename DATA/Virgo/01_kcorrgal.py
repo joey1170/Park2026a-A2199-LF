@@ -24,19 +24,9 @@ Date: 2026
 # ==============================================================================
 # Import Libraries
 # ==============================================================================
-import os
-from pathlib import Path
 import numpy as np
 import pandas as pd
-from astropy import coordinates as coords
-from astropy.coordinates import SkyCoord
-from astropy import units as u
-from astropy.table import Table
-from astropy.io import fits
 from astropy.cosmology import LambdaCDM
-from tqdm import tqdm
-import matplotlib.pyplot as plt
-from matplotlib.ticker import MultipleLocator
 from kcorrect.kcorrect import Kcorrect
 
 # ==============================================================================
@@ -45,39 +35,6 @@ from kcorrect.kcorrect import Kcorrect
 
 # Set cosmology (H0=70 km/s/Mpc, Omega_M=0.3, Omega_Lambda=0.7)
 cosmo = LambdaCDM(H0=70, Om0=0.3, Ode0=0.7)
-
-# Configure matplotlib plotting parameters
-plt.rcParams.update({
-    "font.family": 'STIXGeneral',
-    'text.usetex': False,
-    "mathtext.fontset": 'cm',
-    "axes.labelweight": "normal",
-    'font.size': 25,
-    'font.weight': 'normal',
-    
-    # Tick direction and appearance
-    'xtick.direction': 'in',
-    'ytick.direction': 'in',
-    'xtick.top': True,            # show top ticks
-    'ytick.right': True,          # show right ticks
-    'xtick.minor.visible': True,  # show minor x ticks
-    'ytick.minor.visible': True,  # show minor y ticks
-    'xtick.major.size': 10,
-    'xtick.minor.size': 6,
-    'ytick.major.size': 10,
-    'ytick.minor.size': 6,
-    'xtick.major.width': 1.6,
-    'xtick.minor.width': 1.6,
-    'ytick.major.width': 1.6,
-    'ytick.minor.width': 1.6,
-    
-    # Axes and line properties
-    'lines.linewidth': 2,
-    'axes.linewidth': 3.5,
-    'axes.labelpad': 4,
-    'xtick.major.pad': 7,
-    'image.origin': 'lower'
-})
 
 # Pandas configuration - show all columns
 pd.set_option('display.max_columns', None)
@@ -285,7 +242,7 @@ responses = [f'sdss_{b}0' for b in bands]
 # Initialize Kcorrect object
 print("Initializing Kcorrect...")
 kc = Kcorrect(
-    responses=['sdss_u0', 'sdss_g0', 'sdss_r0', 'sdss_i0', 'sdss_z0'],
+    responses=responses,
     redshift_range=[0.0, 5.0],   # extend z_max to 5.0
     nredshift=6000,              # number of redshift samples
     cosmo=cosmo
@@ -377,7 +334,7 @@ print("="*80)
 output_file = './Virgo_core_mastercat.csv'
 df_main.to_csv(output_file, index=False)
 
-print(f"✓ Successfully saved: {output_file}")
+print(f"Successfully saved: {output_file}")
 print(f"\nFinal catalog summary:")
 print(f"  Number of galaxies: {len(df_main)}")
 print(f"  Number of columns: {len(df_main.columns)}")

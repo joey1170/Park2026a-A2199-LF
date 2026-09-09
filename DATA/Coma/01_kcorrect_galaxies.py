@@ -401,7 +401,7 @@ def main():
     maindf.to_csv(output_file, index=False)
     print(f"  Saved final catalog to: {output_file}")
 
-    # NEW: Save only objects with p_radgal < 35 into a separate file
+    # Save only objects with p_radgal < 35 into a separate file
     mask_within35 = maindf['p_radgal'] < 35
     maindf_within35 = maindf[mask_within35].copy()
     output_within35_file = 'Coma_mastercat_within35arcmin.csv'

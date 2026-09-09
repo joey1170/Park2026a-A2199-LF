@@ -17,7 +17,7 @@ Input file:
     - ./z_A2199_Hwang/z_DATA/z_a2199phot21_5DR9_hshwang_35arcmin_cut.csv
 
 Output file:
-    - NED_query.csv
+    - ./NED/A2199_NED_query.csv
 
 Requirements:
     - astroquery
@@ -182,13 +182,13 @@ def query_ned_for_catalog(df, search_radius_arcsec=1.5, sleep_time=0.0):
         
         except Exception as e:
             # Log errors but continue processing
-            tqdm.write(f"  ⚠️  Error at index {idx}: {e}")
+            tqdm.write(f"  Error at index {idx}: {e}")
             continue
     
     # Convert results to DataFrame
     matched_df = pd.DataFrame(matched_rows)
     
-    print(f"\n✅ Matching complete:")
+    print(f"\nMatching complete:")
     print(f"  Objects with NED matches: {len(matched_df):,} / {len(df):,}")
     print(f"  Match rate: {len(matched_df)/len(df)*100:.1f}%")
     
@@ -303,7 +303,7 @@ def main():
     
     # Check if any matches were found
     if len(matched_df) == 0:
-        print("\n❌ No matches found in NED. Exiting.")
+        print("\nNo matches found in NED. Exiting.")
         return
     
     # Step 3: Deduplicate matches
@@ -319,7 +319,7 @@ def main():
     print("SAVING RESULTS")
     print("="*70)
     deduped_df.to_csv(output_path, index=False)
-    print(f"\n✅ Saved {len(deduped_df):,} matched objects to: {output_path}")
+    print(f"\nSaved {len(deduped_df):,} matched objects to: {output_path}")
     
     # Show column info
     print(f"\nOutput columns:")

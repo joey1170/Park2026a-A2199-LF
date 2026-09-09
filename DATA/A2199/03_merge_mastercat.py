@@ -8,7 +8,7 @@ into a master photometric catalog for the A2199 galaxy cluster:
 2. Merges NED spectroscopic redshifts (coordinate matching)
 3. Merges SDSS DR17 spectroscopic redshifts (object ID matching)
 4. Merges DESI spectroscopic redshifts (coordinate matching)
-5. Determines unified final redshift columns as in 03.Merge_mastercat.ipynb
+5. Determines the adopted redshift z_tot_z (priority: MMT > DESI > SDSS > NED)
 6. Saves final merged catalog
 
 Input files:
@@ -21,7 +21,7 @@ Output file:
     - A2199_mastercat_intermediate_file0.csv
 
 Author: Jongin Park
-Date: 2026 (revised 2024-06 for final z columns)
+Date: 2026
 """
 
 import os
@@ -80,7 +80,7 @@ def merge_ned_redshifts(df_main, df_ned_clean):
     df_merged['z_ned_zerr'] = df_merged['z_ned_zerr'].fillna(-9)
     df_merged['z_ned_name'] = df_merged['z_ned_name'].fillna('NN')
     n_matched = (df_merged['z_ned_z'] != -9).sum()
-    print(f"\n✅ NED merge complete:")
+    print(f"\nNED merge complete:")
     print(f"   Total objects: {len(df_merged):,}")
     print(f"   Objects with NED z: {n_matched:,}")
     print(f"   Match rate: {n_matched/len(df_merged)*100:.1f}%")
@@ -112,7 +112,7 @@ def merge_sdss_redshifts(df_main, df_sdss_clean):
     df_merged['z_sdss_z'] = df_merged['z_sdss_z'].fillna(-9)
     df_merged['z_sdss_zerr'] = df_merged['z_sdss_zerr'].fillna(-9)
     n_matched = (df_merged['z_sdss_z'] != -9).sum()
-    print(f"\n✅ SDSS merge complete:")
+    print(f"\nSDSS merge complete:")
     print(f"   Total objects: {len(df_merged):,}")
     print(f"   Objects with SDSS z: {n_matched:,}")
     print(f"   Match rate: {n_matched/len(df_merged)*100:.1f}%")
@@ -165,7 +165,7 @@ def merge_desi_redshifts(df_main, df_desi_clean, match_radius_arcsec=1.5):
     df_merged['z_desi_zerr'] = df_merged['z_desi_zerr'].fillna(-9)
     df_merged['z_desi_id'] = df_merged['z_desi_id'].fillna('NN')
     n_matched = (df_merged['z_desi_z'] != -9).sum()
-    print(f"\n✅ DESI merge complete:")
+    print(f"\nDESI merge complete:")
     print(f"   Total objects: {len(df_merged):,}")
     print(f"   Objects with DESI z: {n_matched:,}")
     print(f"   Match rate: {n_matched/len(df_merged)*100:.1f}%")
@@ -173,7 +173,7 @@ def merge_desi_redshifts(df_main, df_desi_clean, match_radius_arcsec=1.5):
 
 def determine_final_redshift_columns(df):
     """
-    Set the unified/final redshift columns on the catalog, as in 03.Merge_mastercat.ipynb.
+    Set the adopted (final) redshift columns of the catalog.
     
     Follows:
         - z_tot_z: first available (good) z from MMT, DESI, SDSS, NED
@@ -286,7 +286,7 @@ def main():
     # Step 3: Merge DESI redshifts
     df_desi_clean = prepare_desi_catalog(df_desi)
     df_main = merge_desi_redshifts(df_main, df_desi_clean, match_radius_arcsec=1.5)
-    # Step 4: Determine unified final redshift columns as 03.Merge_mastercat.ipynb
+    # Step 4: Determine the adopted redshift columns
     df_main = determine_final_redshift_columns(df_main)
     # Print summary (include info on z_tot_z etc)
     print_merge_summary(df_main, extra_final_columns=True)
@@ -296,7 +296,7 @@ def main():
     output_file = 'A2199_mastercat_intermediate_file0.csv'
     df_main.to_csv(output_file, index=False)
     file_size_mb = os.path.getsize(output_file) / (1024**2)
-    print(f"\n✅ Saved merged catalog to: {output_file}")
+    print(f"\nSaved merged catalog to: {output_file}")
     print(f"   File size: {file_size_mb:.1f} MB")
     print(f"   Objects: {len(df_main):,}")
     print(f"   Columns: {len(df_main.columns)}")

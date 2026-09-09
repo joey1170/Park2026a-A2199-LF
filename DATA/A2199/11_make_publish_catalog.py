@@ -1,10 +1,30 @@
+#!/usr/bin/env python3
+"""
+Build the machine-readable redshift table of A2199 (Table 2 of the paper)
+
+Selects the objects with a redshift within 35 arcmin of the cluster centre from
+the final master catalog, maps the redshift source (and, for NED redshifts, the
+literature reference) to an integer code, rounds redshifts to 0.0001, and writes
+a fixed-width table with a byte-by-byte header.
+
+Input files:
+    - ./A2199_mastercat_within35arcmin.csv (from 10_membership.py)
+    - ./NED/A2199_NED_query.csv (from 01_ned_matching.py; NED reference codes)
+
+Output file:
+    - A2199_Machine_Readable_Table2.txt
+
+Author: Jongin Park
+Date: 2026
+"""
+
 import pandas as pd
 
 
 def build_df_mrt(master_path="./A2199_mastercat_within35arcmin.csv",
                  ned_query_path="./NED/A2199_NED_query.csv"):
     """
-    Build NED-only working dataframe exactly as in check_0317.ipynb:
+    Build the table of NED redshifts with their reference codes:
       1) load master catalog
       2) select rows with z_tot_zsource == 'NED'
       3) merge NED reference_code from NED query table by (p_ra, p_dec)
@@ -28,7 +48,7 @@ def build_df_mrt(master_path="./A2199_mastercat_within35arcmin.csv",
         ]
     ].copy()
 
-    # (p_ra, p_dec) match as in notebook workflow
+    # (p_ra, p_dec) are identical in both tables
     df_mrt = df_mrt.merge(
         ned_query_df[["p_ra", "p_dec", "reference_code"]],
         on=["p_ra", "p_dec"],
@@ -39,14 +59,14 @@ def build_df_mrt(master_path="./A2199_mastercat_within35arcmin.csv",
 
 
 def main():
-    # 1) Build df_mrt first (requested workflow)
+    # 1) NED reference codes
     df_master, df_mrt = build_df_mrt()
 
     # 2) Keep only objects within 35 arcmin and with valid z
     tempdf = df_master[df_master["p_radgal"] <= 35].copy()
     tempdf = tempdf[tempdf["z_tot_z"] != -9].copy()
 
-    # 3) Select publication columns (same role as previous script)
+    # 3) Publication columns
     pubcat = tempdf[
         [
             "p_objid",
@@ -182,7 +202,7 @@ Note (5):
                 raise ValueError(f"Formatted line length is {len(line.rstrip())}, expected 75: {line!r}")
             f.write(line)
 
-    print("Built df_mrt using NED-only merge workflow.")
+    print("Built the NED reference table.")
     print(f"Unique NED reference_code in df_mrt: {df_mrt['reference_code'].dropna().unique()}")
     print(f"Written table to {output_file}")
 

@@ -98,7 +98,7 @@ def extract_sources_for_a2199(desi_table, cluster_row, radius_arcmin=35):
     matched_sources = desi_table[within_radius]
     output_filename = f"{clid}_DESI_specz_within{radius_arcmin:.0f}arcmin.csv"
     matched_sources.write(output_filename, format="csv", overwrite=True)
-    print(f"  ✅ {clid}: {len(matched_sources):,} sources → {output_filename}")
+    print(f"  {clid}: {len(matched_sources):,} sources → {output_filename}")
     return {clid: len(matched_sources)}
 
 def print_summary(results, radius_arcmin):
@@ -116,7 +116,7 @@ def print_summary(results, radius_arcmin):
     if os.path.exists(filename):
         size_mb = os.path.getsize(filename) / (1024**2)
         print(f"\nOutput file created:")
-        print(f"  ✓ {filename} ({size_mb:.2f} MB)")
+        print(f"  {filename} ({size_mb:.2f} MB)")
     print("="*70)
 
 def main():

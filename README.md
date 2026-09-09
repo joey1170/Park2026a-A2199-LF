@@ -69,7 +69,7 @@ Park2026a-A2199-LF/
 │   ├── Blanton2005_Table2.csv
 │   ├── Blanton2005correctionFactor.txt
 │   ├── Ferrarese2020correctionFactor.csv
-│   ├── A2199_Machine_Redable_Table3.txt
+│   ├── A2199_Machine_Readable_Table3.txt
 └── FIGURE/
     └── images/
         ├── A2199_LF.pdf
@@ -122,6 +122,13 @@ sklearn
 
 - TNG50 simulation catalogs (`DATA/TNG50/TNG50_output_snapNum_96/HALOCAT/`, etc. >25,000 files, several GB)  
   Download from: [IllustrisTNG website](https://www.tng-project.org/)
+
+## Reproducibility note
+
+The catalog in this repository is the erratum (2026-03-20) version. The luminosity-function
+products and stored notebook outputs were regenerated from it and differ very slightly from the
+numbers printed in the paper (A2199: α = −1.27 ± 0.05 instead of −1.23 ± 0.05, within 1σ; no
+change to the conclusions).
 
 ## Citation
 

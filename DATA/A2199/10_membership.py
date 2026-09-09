@@ -11,12 +11,12 @@ the caustic method (CausticSNUpy package):
 5. Adds membership flags to catalog
 
 Input files:
-    - A2199_mastercat_intermediate_file0.csv (merged catalog with z_tot_z)
+    - A2199_mastercat_intermediate_file3_kcorrection.csv (catalog with z_tot_z and M_r)
     - ../AllHeCS_VAC_updated.csv (cluster properties)
 
 Output files:
     - A2199_caustics.csv (caustic envelope parameters)
-    - A2199_mastercat_intermediate_file1.csv (catalog with membership)
+    - A2199_mastercat_within35arcmin.csv (final catalog with membership flag)
 
 Requirements:
     pip install causticsnupy astropy pandas numpy
@@ -146,7 +146,7 @@ def run_caustic_analysis(df_sample, cluster_params):
     q = 100
     r_res = 100      # Resolution of radius grid
     v_res = 100      # Resolution of velocity grid
-    BT_thr = "ALS"   # Binary Tree threshold
+    BT_thr = "ALS"   # Binary-tree threshold (not passed to run_from_array; its default is used)
     center_given = False  # Calculate center from data
     
     print(f"\nParameters:")
@@ -224,8 +224,6 @@ def save_caustic_parameters(result):
     
     # Convert radius to arcminutes
     # Note: r_grid is in Mpc, need to convert using angular diameter distance
-    from astropy import constants as const
-
     # Speed of light
     c = const.c.to('km/s').value  # 299792.458 km/s
 
@@ -246,7 +244,7 @@ def save_caustic_parameters(result):
     output_file = 'A2199_caustics.csv'
     df_caustics.to_csv(output_file, index=False)
     
-    print(f"\n✅ Saved caustic parameters to: {output_file}")
+    print(f"\nSaved caustic parameters to: {output_file}")
     print(f"   Grid points: {len(df_caustics)}")
     print(f"   Radius range: {r_grid.min():.3f} - {r_grid.max():.3f} Mpc")
     print(f"   Amplitude range: {A.min():.1f} - {A.max():.1f} km/s")
@@ -336,7 +334,7 @@ def main():
     output_file = 'A2199_mastercat_within35arcmin.csv'
     df_final.to_csv(output_file, index=False)
     
-    print(f"\n✅ Saved final catalog to: {output_file}")
+    print(f"\nSaved final catalog to: {output_file}")
     print(f"   Total objects: {len(df_final):,}")
     print(f"   Total columns: {len(df_final.columns)}")
     print(f"   Members: {(df_final['member'] == 'Y').sum():,}")
@@ -346,8 +344,8 @@ def main():
     print("="*70)
     print("\nOutput files created:")
     print("  1. A2199_caustics.csv - Caustic envelope parameters")
-    print("  2. A2199_mastercat_intermediate_file1.csv - Catalog with membership")
-    print("\nReady for downstream analysis (galaxy selection, k-corrections, LF)")
+    print("  2. A2199_mastercat_within35arcmin.csv - Catalog with membership")
+    print("\nReady for the analysis notebooks in CODE/")
 
 
 if __name__ == "__main__":

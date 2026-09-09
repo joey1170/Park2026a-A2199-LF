@@ -188,7 +188,7 @@ def main():
     
     # Check if input file exists
     if not os.path.exists(sav_file):
-        print(f"\n❌ Error: Input file not found: {sav_file}")
+        print(f"\nError: Input file not found: {sav_file}")
         print(f"   Please ensure the SDSS DR17 catalog file is in the correct location.")
         return
     
@@ -216,12 +216,12 @@ def main():
     for filepath in [npz_file, csv_file]:
         if os.path.exists(filepath):
             size_mb = os.path.getsize(filepath) / (1024**2)
-            print(f"  ✓ {filepath} ({size_mb:.1f} MB)")
+            print(f"  {filepath} ({size_mb:.1f} MB)")
     
     print(f"\nThe CSV file is ready for use:")
     print(f"  → {csv_file}")
     print(f"\nThis file contains SDSS DR17 spectroscopic redshifts")
-    print(f"and can be used in downstream analysis (e.g., 03.Merge_mastercat.ipynb)")
+    print(f"and is read by 03_merge_mastercat.py")
     
     print("="*70)
 

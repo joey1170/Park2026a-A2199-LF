@@ -13,7 +13,7 @@ Steps:
 5. Convert MegaCam magnitudes to SDSS system
 6. Merge all data and create final photometric catalog
 
-Output: 02.Virgo_core_photcat.csv
+Output: Virgo_core_photcat.csv (read by 01_kcorrgal.py)
 
 Author: Jongin Park
 Date: 2026
@@ -22,19 +22,13 @@ Date: 2026
 # ==============================================================================
 # Import Libraries
 # ==============================================================================
-import os
-from pathlib import Path
 import numpy as np
 import pandas as pd
-from astropy import coordinates as coords
 from astropy.coordinates import SkyCoord
 from astropy import units as u
-from astropy.table import Table
-from astropy.io import fits
 from astropy.cosmology import LambdaCDM
+from astroquery.sdss import SDSS
 from tqdm import tqdm
-import matplotlib.pyplot as plt
-from matplotlib.ticker import MultipleLocator
 
 # ==============================================================================
 # Configuration
@@ -42,39 +36,6 @@ from matplotlib.ticker import MultipleLocator
 
 # Set cosmology (H0=70 km/s/Mpc, Omega_M=0.3, Omega_Lambda=0.7)
 cosmo = LambdaCDM(H0=70, Om0=0.3, Ode0=0.7)
-
-# Configure matplotlib plotting parameters
-plt.rcParams.update({
-    "font.family": 'STIXGeneral',
-    'text.usetex': False,
-    "mathtext.fontset": 'cm',
-    "axes.labelweight": "normal",
-    'font.size': 25,
-    'font.weight': 'normal',
-    
-    # Tick direction and appearance
-    'xtick.direction': 'in',
-    'ytick.direction': 'in',
-    'xtick.top': True,            # show top ticks
-    'ytick.right': True,          # show right ticks
-    'xtick.minor.visible': True,  # show minor x ticks
-    'ytick.minor.visible': True,  # show minor y ticks
-    'xtick.major.size': 10,
-    'xtick.minor.size': 6,
-    'ytick.major.size': 10,
-    'ytick.minor.size': 6,
-    'xtick.major.width': 1.6,
-    'xtick.minor.width': 1.6,
-    'ytick.major.width': 1.6,
-    'ytick.minor.width': 1.6,
-    
-    # Axes and line properties
-    'lines.linewidth': 2,
-    'axes.linewidth': 3.5,
-    'axes.labelpad': 4,
-    'xtick.major.pad': 7,
-    'image.origin': 'lower'
-})
 
 # Pandas configuration - show all columns
 pd.set_option('display.max_columns', None)
@@ -254,8 +215,6 @@ print("\n" + "="*80)
 print("STEP 3: Querying SDSS DR18 for Extinction and Photometry")
 print("="*80)
 print("This step may take a while (querying 404 galaxies)...")
-
-from astroquery.sdss import SDSS
 
 # SQL query template to get SDSS photometry and extinction within 1 arcsec
 sql_select = """
@@ -480,10 +439,10 @@ print("\n" + "="*80)
 print("STEP 10: Saving Final Photometric Catalog")
 print("="*80)
 
-output_file = '02.Virgo_core_photcat.csv'
+output_file = 'Virgo_core_photcat.csv'
 df_main.to_csv(output_file, index=False)
 
-print(f"✓ Successfully saved: {output_file}")
+print(f"Successfully saved: {output_file}")
 print(f"\nFinal catalog summary:")
 print(f"  Number of galaxies: {len(df_main)}")
 print(f"  Number of columns: {len(df_main.columns)}")
